@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your App Title</title>
+    <!-- Include your CSS stylesheets here -->
+</head>
+<body>
+    <header>
+        <h1>Your App</h1>
+        <!-- Include your navigation menu here -->
+        <nav>
+            <ul>
+                <li><a href="{% url 'add_comment' %}">Add Comment</a></li>
+                <li><a href="{% url 'comment_list' %}">View Comments</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <!-- Include your footer content here -->
+        <p>&copy; {{ current_year }} Your App. All rights reserved.</p>
+    </footer>
+</body>
+</html>
