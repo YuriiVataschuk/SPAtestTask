@@ -10,4 +10,5 @@
   {% if parent_comment %}
     <a href="{% url 'add_nested_comment' parent_comment.id %}">Reply to {{ parent_comment.user_name }}</a>
   {% endif %}
+
 {% endblock %}

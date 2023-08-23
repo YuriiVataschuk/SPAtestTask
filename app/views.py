@@ -3,6 +3,8 @@ from django.views import View
 from .models import Comment
 from .forms import CommentForm
 
+
+
 class AddCommentView(View):
     template_name = 'add_comment.html'
 
@@ -25,10 +27,10 @@ class AddCommentView(View):
             return redirect('comment_list')  # Redirect to the comment list view
         return render(request, self.template_name, {'form': form, 'parent_comment': parent_comment})
 
+
 class CommentListView(View):
     template_name = 'comment_list.html'
 
     def get(self, request):
         comments = Comment.objects.filter(parent_comment=None)  # Fetch top-level comments
         return render(request, self.template_name, {'comments': comments})
-

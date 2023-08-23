@@ -5,11 +5,11 @@
   <ul>
     {% for comment in comments %}
       <li>
-        {{ comment.user_name }} - {{ comment.text }}
+        {{ comment.user_name }} - {{ comment.text|safe }}
         <a href="{% url 'add_nested_comment' comment.id %}">Reply</a>
         <ul>
           {% for child_comment in comment.comment_set.all %}
-            <li>{{ child_comment.user_name }} - {{ child_comment.text }}</li>
+            <li>{{ child_comment.user_name }} - {{ child_comment.text|safe }}</li>
           {% endfor %}
         </ul>
       </li>
