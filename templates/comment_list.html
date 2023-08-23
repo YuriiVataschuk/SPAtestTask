@@ -1,23 +1,42 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-  <h2>Comments</h2>
+  <h2 class="page-heading">Comments</h2>
 
-  <div class="sorting-links">
-    <a href="?sort_by=user_name">Sort by User Name</a>
-    <a href="?sort_by=email">Sort by E-mail</a>
-    <a href="?sort_by=-timestamp">Sort by Date (Newest First)</a>
-    <a href="?sort_by=timestamp">Sort by Date (Oldest First)</a>
+  <div class="sorting-container">
+      <a href="?sort_by=user_name" class="sorting-link">Sort by User Name</a>
+      <a href="?sort_by=email" class="sorting-link">Sort by E-mail</a>
+      <a href="?sort_by=-timestamp" class="sorting-link">Sort by Date (Newest First)</a>
+      <a href="?sort_by=timestamp" class="sorting-link">Sort by Date (Oldest First)</a>
   </div>
 
-  <ul>
+  <ul class="comments-list">
     {% for comment in page_comments %}
-      <li>
-        {{ comment.user_name }} - {{ comment.text|safe }}
-        <a href="{% url 'add_nested_comment' comment.id %}">Reply</a>
-        <ul>
+      <li class="comment">
+        <div class="comment-header">
+          <strong class="user-name">{{ comment.user_name }}</strong>
+          <span class="timestamp">{{ comment.timestamp }}</span>
+        </div>
+        <div class="comment-text">{{ comment.text|safe }}</div>
+        {% if comment.image %}
+          <a href="#" class="lightbox-link" data-image-url="{{ comment.image.url }}">
+            <img src="{{ comment.image.url }}" alt="Image">
+          </a>
+        {% endif %}
+        {% if comment.text_file %}
+          <a href="{{ comment.text_file.url }}" class="download-link">Download Text File</a>
+        {% endif %}
+        <a href="{% url 'app:add_nested_comment' comment.id %}" class="reply-link">Reply</a>
+        <ul class="child-comments">
           {% for child_comment in comment.comment_set.all %}
-            <li>{{ child_comment.user_name }} - {{ child_comment.text|safe }}</li>
+            <li class="child-comment">
+              <div class="comment-header">
+                <strong class="user-name">{{ child_comment.user_name }}</strong>
+                <span class="timestamp">{{ child_comment.timestamp }}</span>
+              </div>
+              <div class="comment-text">{{ child_comment.text|safe }}</div>
+            </li>
           {% endfor %}
         </ul>
       </li>
@@ -26,15 +45,15 @@
 
   <div class="pagination">
     {% if page_comments.has_previous %}
-      <a href="?page=1&sort_by={{ sort_by }}">First</a>
-      <a href="?page={{ page_comments.previous_page_number }}&sort_by={{ sort_by }}">Previous</a>
+      <a href="?page=1&sort_by={{ sort_by }}" class="page-link">First</a>
+      <a href="?page={{ page_comments.previous_page_number }}&sort_by={{ sort_by }}" class="page-link">Previous</a>
     {% endif %}
 
     <span class="current-page">{{ page_comments.number }}</span>
 
     {% if page_comments.has_next %}
-      <a href="?page={{ page_comments.next_page_number }}&sort_by={{ sort_by }}">Next</a>
-      <a href="?page={{ page_comments.paginator.num_pages }}&sort_by={{ sort_by }}">Last</a>
+      <a href="?page={{ page_comments.next_page_number }}&sort_by={{ sort_by }}" class="page-link">Next</a>
+      <a href="?page={{ page_comments.paginator.num_pages }}&sort_by={{ sort_by }}" class="page-link">Last</a>
     {% endif %}
   </div>
 {% endblock %}

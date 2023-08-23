@@ -1,9 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your App Title</title>
+    {% load static %}
+    <script src="{% static 'app/custom.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/styles.css' %}">
     <!-- Include your CSS stylesheets here -->
 </head>
 <body>
@@ -12,8 +16,8 @@
         <!-- Include your navigation menu here -->
         <nav>
             <ul>
-                <li><a href="{% url 'add_comment' %}">Add Comment</a></li>
-                <li><a href="{% url 'comment_list' %}">View Comments</a></li>
+                <li><a href="{% url 'app:add_comment' %}">Add Comment</a></li>
+                <li><a href="{% url 'app:comment_list' %}">View Comments</a></li>
             </ul>
         </nav>
     </header>

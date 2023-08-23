@@ -1,14 +1,34 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Add Comment</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-  </form>
-  {% if parent_comment %}
-    <a href="{% url 'add_nested_comment' parent_comment.id %}">Reply to {{ parent_comment.user_name }}</a>
-  {% endif %}
-
+  <div class="comment-form">
+    <h2>Add Comment</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.user_name.id_for_label }}">Your Name:</label>
+        {{ form.user_name }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.email.id_for_label }}">Your Email:</label>
+        {{ form.email }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.text.id_for_label }}">Comment:</label>
+        {{ form.text }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.image.id_for_label }}">Image (optional):</label>
+        {{ form.image }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.text_file.id_for_label }}">Text File (optional):</label>
+        {{ form.text_file }}
+      </div>
+      <button type="submit" class="submit-button">Submit</button>
+    </form>
+    {% if parent_comment %}
+      <a href="{% url 'app:add_nested_comment' parent_comment.id %}" class="reply-link">Reply to {{ parent_comment.user_name }}</a>
+    {% endif %}
+  </div>
 {% endblock %}
