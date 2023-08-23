@@ -1,8 +1,8 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Comment
 from .forms import CommentForm
-
 
 
 class AddCommentView(View):
@@ -30,7 +30,18 @@ class AddCommentView(View):
 
 class CommentListView(View):
     template_name = 'comment_list.html'
+    page_size = 25
 
     def get(self, request):
-        comments = Comment.objects.filter(parent_comment=None)  # Fetch top-level comments
-        return render(request, self.template_name, {'comments': comments})
+        sort_by = request.GET.get('sort_by', '-timestamp')  # Change 'date_added' to 'timestamp'
+        allowed_sort_fields = ['user_name', 'email', 'timestamp']  # Add other allowed sort fields
+        if sort_by not in allowed_sort_fields:
+            sort_by = '-timestamp'  # Default to sorting by timestamp
+
+        comments = Comment.objects.filter(parent_comment=None).order_by(sort_by)
+
+        paginator = Paginator(comments, self.page_size)
+        page_number = request.GET.get('page')
+        page_comments = paginator.get_page(page_number)
+
+        return render(request, self.template_name, {'page_comments': page_comments, 'sort_by': sort_by})

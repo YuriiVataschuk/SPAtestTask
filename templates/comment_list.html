@@ -2,8 +2,16 @@
 
 {% block content %}
   <h2>Comments</h2>
+
+  <div class="sorting-links">
+    <a href="?sort_by=user_name">Sort by User Name</a>
+    <a href="?sort_by=email">Sort by E-mail</a>
+    <a href="?sort_by=-timestamp">Sort by Date (Newest First)</a>
+    <a href="?sort_by=timestamp">Sort by Date (Oldest First)</a>
+  </div>
+
   <ul>
-    {% for comment in comments %}
+    {% for comment in page_comments %}
       <li>
         {{ comment.user_name }} - {{ comment.text|safe }}
         <a href="{% url 'add_nested_comment' comment.id %}">Reply</a>
@@ -15,4 +23,18 @@
       </li>
     {% endfor %}
   </ul>
+
+  <div class="pagination">
+    {% if page_comments.has_previous %}
+      <a href="?page=1&sort_by={{ sort_by }}">First</a>
+      <a href="?page={{ page_comments.previous_page_number }}&sort_by={{ sort_by }}">Previous</a>
+    {% endif %}
+
+    <span class="current-page">{{ page_comments.number }}</span>
+
+    {% if page_comments.has_next %}
+      <a href="?page={{ page_comments.next_page_number }}&sort_by={{ sort_by }}">Next</a>
+      <a href="?page={{ page_comments.paginator.num_pages }}&sort_by={{ sort_by }}">Last</a>
+    {% endif %}
+  </div>
 {% endblock %}
