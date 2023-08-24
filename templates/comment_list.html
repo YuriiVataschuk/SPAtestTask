@@ -2,46 +2,88 @@
 {% load static %}
 
 {% block content %}
-  <h2 class="page-heading">Comments</h2>
+  <h2 class="page-heading">Company chat</h2>
 
   <div class="sorting-container">
-      <a href="?sort_by=user_name" class="sorting-link">Sort by User Name</a>
-      <a href="?sort_by=email" class="sorting-link">Sort by E-mail</a>
-      <a href="?sort_by=-timestamp" class="sorting-link">Sort by Date (Newest First)</a>
-      <a href="?sort_by=timestamp" class="sorting-link">Sort by Date (Oldest First)</a>
+    <a href="?sort_by=user_name" class="sorting-link">Sort by User Name</a>
+    <a href="?sort_by=email" class="sorting-link">Sort by E-mail</a>
+    <a href="?sort_by=-timestamp" class="sorting-link">Sort by Date (Newest First)</a>
+    <a href="?sort_by=timestamp" class="sorting-link">Sort by Date (Oldest First)</a>
   </div>
 
-  <ul class="comments-list">
-    {% for comment in page_comments %}
-      <li class="comment">
-        <div class="comment-header">
-          <strong class="user-name">{{ comment.user_name }}</strong>
-          <span class="timestamp">{{ comment.timestamp }}</span>
-        </div>
-        <div class="comment-text">{{ comment.text|safe }}</div>
-        {% if comment.image %}
-          <a href="#" class="lightbox-link" data-image-url="{{ comment.image.url }}">
-            <img src="{{ comment.image.url }}" alt="Image">
-          </a>
-        {% endif %}
-        {% if comment.text_file %}
-          <a href="{{ comment.text_file.url }}" class="download-link">Download Text File</a>
-        {% endif %}
-        <a href="{% url 'app:add_nested_comment' comment.id %}" class="reply-link">Reply</a>
-        <ul class="child-comments">
-          {% for child_comment in comment.comment_set.all %}
-            <li class="child-comment">
-              <div class="comment-header">
-                <strong class="user-name">{{ child_comment.user_name }}</strong>
-                <span class="timestamp">{{ child_comment.timestamp }}</span>
-              </div>
-              <div class="comment-text">{{ child_comment.text|safe }}</div>
-            </li>
-          {% endfor %}
-        </ul>
-      </li>
-    {% endfor %}
-  </ul>
+  <div class="comments-container">
+  {% for comment in page_comments %}
+    <div class="comment {% if comment.parent_comment %}nested-comment{% endif %}">
+      <div class="comment-header">
+        <strong class="user-name">{{ comment.user_name }}</strong>
+        <span class="timestamp">{{ comment.timestamp }}</span>
+      </div>
+      <div class="comment-text">{{ comment.text|safe }}</div>
+      {% if comment.image %}
+        <a href="#" class="lightbox-link" data-image-url="{{ comment.image.url }}">
+          <img src="{{ comment.image.url }}" alt="Image">
+        </a>
+      {% endif %}
+      {% if comment.text_file %}
+        <a href="{{ comment.text_file.url }}" class="download-link">Download Text File</a>
+      {% endif %}
+      <a href="{% url 'app:add_nested_comment' comment.id %}" class="reply-link">Reply</a>
+      <div class="nested-replies">
+        {% for reply in comment.replies.all %}
+          <div class="comment nested-comment">
+            <div class="comment-header">
+              <strong class="user-name">{{ reply.user_name }}</strong>
+              <span class="timestamp">{{ reply.timestamp }}</span>
+            </div>
+            <div class="comment-text">{{ reply.text|safe }}</div>
+            <a href="{% url 'app:add_nested_comment' reply.id %}" class="reply-link">Reply</a>
+            <div class="nested-replies">
+              {% for nested_reply in reply.replies.all %}
+                <div class="comment nested-comment">
+                  <div class="comment-header">
+                    <strong class="user-name">{{ nested_reply.user_name }}</strong>
+                    <span class="timestamp">{{ nested_reply.timestamp }}</span>
+                  </div>
+                  <div class="comment-text">{{ nested_reply.text|safe }}</div>
+                  <a href="{% url 'app:add_nested_comment' nested_reply.id %}" class="reply-link">Reply</a>
+                  <div class="nested-replies">
+                    {% for more_nested_reply in nested_reply.replies.all %}
+                      <div class="comment nested-comment">
+                        <div class="comment-header">
+                          <strong class="user-name">{{ more_nested_reply.user_name }}</strong>
+                          <span class="timestamp">{{ more_nested_reply.timestamp }}</span>
+                        </div>
+                        <div class="comment-text">{{ more_nested_reply.text|safe }}</div>
+                        <a href="{% url 'app:add_nested_comment' more_nested_reply.id %}" class="reply-link">Reply</a>
+                        <div class="nested-replies">
+                          {% for even_more_nested_reply in more_nested_reply.replies.all %}
+                            <div class="comment nested-comment">
+                              <div class="comment-header">
+                                <strong class="user-name">{{ even_more_nested_reply.user_name }}</strong>
+                                <span class="timestamp">{{ even_more_nested_reply.timestamp }}</span>
+                              </div>
+                              <div class="comment-text">{{ even_more_nested_reply.text|safe }}</div>
+                              <a href="{% url 'app:add_nested_comment' even_more_nested_reply.id %}" class="reply-link">Reply</a>
+                              <!-- Continue nesting as needed -->
+                            </div>
+                          {% endfor %}
+                        </div>
+                        <!-- Continue nesting as needed -->
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <!-- Continue nesting as needed -->
+                </div>
+              {% endfor %}
+            </div>
+            <!-- Continue nesting as needed -->
+          </div>
+        {% endfor %}
+      </div>
+      <!-- Continue nesting as needed -->
+    </div>
+  {% endfor %}
+</div>
 
   <div class="pagination">
     {% if page_comments.has_previous %}

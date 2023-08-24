@@ -5,7 +5,7 @@ from django.db import models
 
 
 class Comment(models.Model):
-    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     user_name = models.CharField(max_length=100)
     email = models.EmailField()
     text = models.TextField()
@@ -21,3 +21,4 @@ class Comment(models.Model):
 
     def get_text_file_filename(self):
         return os.path.basename(self.text_file.name)
+

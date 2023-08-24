@@ -20,11 +20,17 @@ class AddCommentView(View):
         parent_comment = None
         if parent_comment_id:
             parent_comment = Comment.objects.get(pk=parent_comment_id)
-        form = CommentForm(request.POST, request.FILES)  # Include request.FILES for file fields
+        form = CommentForm(request.POST, request.FILES)
+        comment = None
         if form.is_valid():
-            comment = form.save(commit=False)
-            comment.parent_comment = parent_comment
-            comment.save()
+            comment_data = form.cleaned_data
+            if parent_comment:
+                comment_data['parent_comment'] = parent_comment
+                comment = Comment(**comment_data)
+                comment.save()
+                parent_comment.replies.add(comment)  # Associate the reply with the parent comment
+            else:
+                comment = Comment.objects.create(**comment_data)  # Assign the created comment to the variable
 
             if comment.image:
                 max_width = 320
@@ -33,8 +39,7 @@ class AddCommentView(View):
                 image = ImageOps.fit(image, (max_width, max_height), Image.Resampling.BICUBIC)
                 image.save(comment.image.path)
 
-            comment.save()
-            return redirect('comment_list')  # Redirect to the comment list view
+            return redirect('app:comment_list')
         return render(request, self.template_name, {'form': form, 'parent_comment': parent_comment})
 
 
@@ -67,4 +72,4 @@ class CommentListView(View):
         comment.text_file = text_file
         comment.save()
 
-        return redirect('comment_list')
+        return redirect('app:comment_list')

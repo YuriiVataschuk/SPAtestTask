@@ -2,7 +2,7 @@
 body, h1, h2, h3, p, ul, li {
   margin: 0;
   padding: 0;
-  line-height: 1.5; /* Add this line for increased line spacing */
+  line-height: 1.5;
 }
 
 /* Body styles */
@@ -34,12 +34,12 @@ nav ul li {
 
 nav ul li a {
   text-decoration: none;
-  color: #333;
+  color: white;
   transition: color 0.3s ease;
 }
 
 nav ul li a:hover {
-  color: #666;
+  color: silver;
 }
 
 /* Main content styles */
@@ -51,19 +51,15 @@ main {
 .comment {
   border: 1px solid #ccc;
   padding: 20px;
-  margin-bottom: 30px; /* Increase space between comments */
+  margin-bottom: 30px;
   background-color: #fff;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  line-height: 3; /* Increase this value for more vertical space */
-  display: flex; /* Use flexbox to arrange elements horizontally */
-  flex-direction: column; /* Stack elements vertically within the comment */
 }
 
 .comment p {
   margin-bottom: 15px;
-  margin-top: 15px; /* Add margin to the top of paragraphs */
-  line-height: 1.8; /* Increase this value for more vertical space */
+  margin-top: 15px;
 }
 
 .comment h3 {
@@ -87,13 +83,15 @@ main {
 
 .comment .reply-link {
   margin-top: 15px;
+  margin-bottom: 15px;
   display: inline-block;
   text-decoration: none;
   color: #333;
-  border: 1px solid #333;
-  padding: 5px 10px;
+  border: 3px solid #333;
+  padding: 5px 10px; /* Adjust the padding values as needed */
   border-radius: 5px;
   transition: background-color 0.3s ease;
+  line-height: 1; /* Adjust the line height to match the button height */
 }
 
 .comment .reply-link:hover {
@@ -149,4 +147,9 @@ main {
 .sorting-link:hover {
   background-color: #333;
   color: #fff;
+}
+
+/* Nested comments indentation */
+.nested-comment {
+  margin-left: 20px; /* Adjust this value for nesting level */
 }
