@@ -24,9 +24,14 @@
           <img src="{{ comment.image.url }}" alt="Image">
         </a>
       {% endif %}
-      {% if comment.text_file %}
-        <a href="{{ comment.text_file.url }}" class="download-link">Download Text File</a>
-      {% endif %}
+      <div class="form-group">
+        <label for="{{ form.text_file.id_for_label }}">Text File (optional):</label>
+        {% if instance.text_file %}
+          <a href="{% url 'serve_text_file' instance.text_file.name %}">Download Text File</a>
+        {% else %}
+          No text file attached.
+        {% endif %}
+      </div>
       <a href="{% url 'app:add_nested_comment' comment.id %}" class="reply-link">Reply</a>
       <div class="nested-replies">
         {% for reply in comment.replies.all %}

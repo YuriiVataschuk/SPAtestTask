@@ -1,6 +1,8 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+
+from app import views
 from app.views import AddCommentView, CommentListView
 
 app_name = "app"
@@ -13,3 +15,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    path('media/files/<str:filename>/', views.serve_text_file, name='serve_text_file'),
+]

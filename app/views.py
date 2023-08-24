@@ -1,9 +1,28 @@
+import os
+
+from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import UploadedFile
 from django.core.paginator import Paginator
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render, redirect
 from django.views import View
+
+from SPAtestTask import settings
 from .models import Comment
 from .forms import CommentForm
 from PIL import Image, ImageOps
+
+
+def serve_text_file(request, filename):
+    file_path = os.path.join(settings.MEDIA_ROOT, 'files', filename)
+
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        with open(file_path, 'rb') as file:
+            response = FileResponse(file, content_type='text/plain')
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return response
+
+    return HttpResponse("File not found", status=404)
 
 
 class AddCommentView(View):
@@ -53,9 +72,21 @@ class AddCommentView(View):
                 max_width = 320
                 max_height = 240
                 image = Image.open(comment.image.path)
-                image = ImageOps.fit(image, (max_width, max_height), Image.Resampling.BICUBIC)
+
+                # Resize the image while preserving aspect ratio
+                image.thumbnail((max_width, max_height))
+
+                # Save the resized image back
                 image.save(comment.image.path)
 
+                # Validate image format
+                valid_formats = ['image/jpeg', 'image/png', 'image/gif']
+
+                if isinstance(comment.image.file,
+                              UploadedFile) and comment.image.file.content_type not in valid_formats:
+                    raise ValidationError("Invalid image format. Allowed formats: JPG, PNG, GIF")
+
+                print("Comment Instance Text File:", comment.text_file)
             return redirect('app:comment_list')
         return render(request, self.template_name, {'form': form, 'parent_comment': parent_comment})
 
