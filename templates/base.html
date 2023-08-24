@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company chat</title>
     <link rel="stylesheet" type="text/css" href="{% static 'app/css/styles.css' %}">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- Include your CSS stylesheets here -->
 </head>
 <body>
     <header>
         <h1>Test Chat</h1>
-        <!-- Include your navigation menu here -->
         <nav>
             <ul>
                 <li><a href="{% url 'app:add_comment' %}">Add Comment</a></li>

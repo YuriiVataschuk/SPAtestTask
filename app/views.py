@@ -23,14 +23,31 @@ class AddCommentView(View):
         form = CommentForm(request.POST, request.FILES)
         comment = None
         if form.is_valid():
-            comment_data = form.cleaned_data
+            user_name = form.cleaned_data['user_name']
+            email = form.cleaned_data['email']
+            text = form.cleaned_data['text']
+            image = form.cleaned_data['image']
+            text_file = form.cleaned_data['text_file']
+
             if parent_comment:
-                comment_data['parent_comment'] = parent_comment
-                comment = Comment(**comment_data)
-                comment.save()
-                parent_comment.replies.add(comment)  # Associate the reply with the parent comment
+                comment = Comment(
+                    parent_comment=parent_comment,
+                    user_name=user_name,
+                    email=email,
+                    text=text,
+                    image=image,
+                    text_file=text_file
+                )
             else:
-                comment = Comment.objects.create(**comment_data)  # Assign the created comment to the variable
+                comment = Comment(
+                    user_name=user_name,
+                    email=email,
+                    text=text,
+                    image=image,
+                    text_file=text_file
+                )
+
+            comment.save()
 
             if comment.image:
                 max_width = 320
