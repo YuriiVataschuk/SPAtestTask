@@ -3,14 +3,23 @@ import os
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
 from django.core.paginator import Paginator
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
+from markdown import markdown
 
 from SPAtestTask import settings
 from .models import Comment
 from .forms import CommentForm
 from PIL import Image, ImageOps
+
+
+def comment_preview(request):
+    if request.method == 'POST':
+        comment_text = request.POST.get('comment_text', '')
+        preview_context = {'preview_text': comment_text}
+        return render(request, 'preview_template.html', preview_context)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
 def serve_text_file(request, filename):

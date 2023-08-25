@@ -11,6 +11,7 @@ urlpatterns = [
     path('add_comment/', AddCommentView.as_view(), name='add_comment'),
     path('add_nested_comment/<int:parent_comment_id>/', AddCommentView.as_view(), name='add_nested_comment'),
     path('comment_list/', CommentListView.as_view(), name='comment_list'),
+    path('comment_preview/', views.comment_preview, name='comment_preview'),
 ]
 
 if settings.DEBUG:

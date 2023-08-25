@@ -31,6 +31,52 @@
         <div class="g-recaptcha" data-sitekey="6LeS49AnAAAAAN0EfnD-X5EYiJHoEBMCiZx_x2w1"></div>
       </div>
       <button type="submit" class="submit-button">Submit</button>
+
+      <!-- Comment Preview Container -->
+      <div class="form-group">
+        <label for="comment-preview">Comment Preview:</label>
+        <div id="comment-preview" class="comment-preview"></div>
+      </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const form = document.querySelector('.comment-form');
+          const submitButton = form.querySelector('.submit-button');
+          const commentTextArea = form.querySelector('#{{ form.text.id_for_label }}');
+          const commentPreviewContainer = document.getElementById('comment-preview');
+
+          form.addEventListener('submit', function(event) {
+            const userField = form.querySelector('#{{ form.user_name.id_for_label }}');
+            const emailField = form.querySelector('#{{ form.email.id_for_label }}');
+
+            if (!userField.value.trim() || !emailField.value.trim() || !commentTextArea.value.trim()) {
+              event.preventDefault();
+              alert('Please fill out all required fields.');
+            }
+          });
+
+          // Add event listener for comment text area
+          commentTextArea.addEventListener('input', function() {
+            const commentText = commentTextArea.value;
+
+            fetch('{% url "app:comment_preview" %}', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+              },
+              body: JSON.stringify({ text: commentText }),
+            })
+              .then(response => response.json())
+              .then(data => {
+                commentPreviewContainer.innerHTML = data.html;
+              })
+              .catch(error => {
+                console.error('Error fetching preview:', error);
+              });
+          });
+        });
+      </script>
     </form>
   </div>
 {% endblock %}
