@@ -134,4 +134,3 @@ RECAPTCHA_PRIVATE_KEY = '6LeS49AnAAAAAPR0ri2x3GC6uz7iB16Bdga3q7U3'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-

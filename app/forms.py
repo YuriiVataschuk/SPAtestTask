@@ -1,6 +1,5 @@
 import os
 
-from captcha.fields import ReCaptchaField
 from django.core.exceptions import ValidationError
 from django.forms import ImageField, FileField
 import bleach
@@ -24,11 +23,10 @@ class CommentForm(forms.ModelForm):
 
     image = ImageField(required=False)
     text_file = FileField(required=False, validators=[validate_text_file])
-    captcha = ReCaptchaField()
 
     class Meta:
         model = Comment
-        fields = ['user_name', 'email', 'text', 'image', 'text_file', 'captcha']
+        fields = ['user_name', 'email', 'text', 'image', 'text_file']
 
     def clean_text(self):
         text = self.cleaned_data['text']

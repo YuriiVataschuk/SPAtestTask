@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 {% block content %}
   <div class="comment-form">
@@ -25,10 +24,6 @@
       <div class="form-group">
         <label for="{{ form.text_file.id_for_label }}">Text File (optional):</label>
         {{ form.text_file }}
-      </div>
-      <div class="form-group">
-        <script src='https://www.google.com/recaptcha/api.js'></script>
-        <div class="g-recaptcha" data-sitekey="6LeS49AnAAAAAN0EfnD-X5EYiJHoEBMCiZx_x2w1"></div>
       </div>
       <button type="submit" class="submit-button">Submit</button>
 
